@@ -11,11 +11,13 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
 import { ProjectsService } from './projects.service';
 
+@ApiTags('projects')
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}

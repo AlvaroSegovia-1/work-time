@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=user_nest
+      - POSTGRES_PASSWORD=pass_nest
+      - POSTGRES_DB=db_nest
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "alvaro@alvaro.com"
+      PGADMIN_DEFAULT_PASSWORD: "alvaro"
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres  
