@@ -5,11 +5,11 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
   Post,
-  Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -24,7 +24,7 @@ export class ProjectsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getManyProjects(@Req() req): Project[] {
+  getManyProjects(): Promise<Project[]> {
     //return 'getManyProjects';
     //return mock;
     return this.projectsService.getManyProjects();
@@ -32,16 +32,20 @@ export class ProjectsController {
 
   @Get(':projectId')
   @HttpCode(HttpStatus.OK)
-  getOneProject(@Param('projectId') projectId: number): Project {
+  async getOneProject(@Param('projectId') projectId: number): Promise<Project> {
     //return 'getOneProject';
     //return projectId;
     //return mock[0];
-    return this.projectsService.getOneProject(projectId);
+    const project = await this.projectsService.getOneProject(projectId);
+    if (!project) {
+      throw new NotFoundException(`Proyecto con id ${projectId} no existe`);
+    }
+    return project;
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  createOneProject(@Body() projectDto: CreateProjectDto): Project {
+  createOneProject(@Body() projectDto: CreateProjectDto): Promise<Project> {
     //return 'postOneProject';
     // return {} as Project;
     return this.projectsService.createOneProject(projectDto);
@@ -52,7 +56,7 @@ export class ProjectsController {
   partialUpdateOneProject(
     @Param('projectId', ParseIntPipe) projectId: number,
     @Body() updateProjectDto: UpdateProjectDto,
-  ): Project {
+  ): Promise<Project> {
     //return 'partialUpdateOneProject';
     //return projectId;
     //return {} as Project;
@@ -65,7 +69,7 @@ export class ProjectsController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':projectId')
-  deleteOneProject(@Param('projectId') projectId: number) {
+  deleteOneProject(@Param('projectId', ParseIntPipe) projectId: number) {
     //return 'deleteOneProject';
     //return projectId;
     return this.projectsService.deleteOneProject(projectId);

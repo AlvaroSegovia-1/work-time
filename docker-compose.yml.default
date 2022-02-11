@@ -16,7 +16,7 @@ services:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: "alvaro@alvaro.com"
-      PGADMIN_DEFAULT_PASSWORD: "alvaro"
+      PGADMIN_DEFAULT_PASSWORD: "root"
     ports:
       - "80:80"
     depends_on:

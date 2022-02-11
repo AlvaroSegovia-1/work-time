@@ -19,12 +19,14 @@ async function bootstrap() {
     .setDescription('The work time system API description')
     .setVersion('1.0')
     .addTag('projects')
+    .addTag('total-time-logs')
+    .addTag('work-time-logs')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('doc', app, document);
-  
+
   await app.listen(3000);
 }
 bootstrap();
