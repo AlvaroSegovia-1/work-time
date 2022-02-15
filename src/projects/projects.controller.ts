@@ -11,7 +11,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
@@ -51,6 +51,12 @@ export class ProjectsController {
     return this.projectsService.createOneProject(projectDto);
   }
 
+ /*  @ApiQuery({
+    name: 'parametro',
+    type: 'boolean',
+    required: false,
+    example: 'ASC',
+  }) */
   @HttpCode(HttpStatus.OK)
   @Patch(':projectId')
   partialUpdateOneProject(

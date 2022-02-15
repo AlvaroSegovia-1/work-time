@@ -22,7 +22,7 @@ export class CreateProjectDto {
   @Length(8, 16)
   key: string;
 
-  @ApiProperty()
+  @ApiProperty() // de Swagger
   @IsString()
   @IsNotEmpty()
   title: string;
