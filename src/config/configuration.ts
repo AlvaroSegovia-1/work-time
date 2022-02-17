@@ -13,7 +13,7 @@ export default () => ({
     //database: 'db_nest',
     database: process.env.DATABASE_NAME,
     autoLoadEntities: true, // es de nestjs
-    synchronize: true, // solo para desarrollo, de nestjs
+    synchronize: process.env.DATABASE_SYNC === 'true', // solo para desarrollo, de nestjs
     retryDelay: 3000,
     retryAttempts: 10,
   },

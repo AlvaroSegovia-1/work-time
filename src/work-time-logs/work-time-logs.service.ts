@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-//import { Project } from 'src/projects/entities/project.entity';
+import { Project } from 'src/projects/entities/project.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateWorkTimeLogDto } from './dto/create-work-time-log.dto';
-//import { UpdateWorkTimeLogDto } from './dto/update-work-time-log.dto';
+import { UpdateWorkTimeLogDto } from './dto/update-work-time-log.dto';
 import { WorkTimeLog } from './entities/work-time-log.entity';
 
 @Injectable()
@@ -44,9 +44,9 @@ export class WorkTimeLogsService {
     return `This action returns a #${id} workTimeLog`;
   }
 
-  /*  update(id: number, updateWorkTimeLogDto: UpdateWorkTimeLogDto) {
+  update(id: number, updateWorkTimeLogDto: UpdateWorkTimeLogDto) {
     return `This action updates a #${id} workTimeLog`;
-  } */
+  }
 
   remove(id: number) {
     return `This action removes a #${id} workTimeLog`;
