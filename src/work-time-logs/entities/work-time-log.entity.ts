@@ -7,6 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('work-time-logs')
 export class WorkTimeLog {
@@ -16,20 +17,22 @@ export class WorkTimeLog {
   @Column({ type: 'smallint' })
   hours: number;
 
-  @Column({ type: 'date' })
+  @Column({ name: 'date', type: 'date' })
   date: Date;
 
-  // Se añade estas dos columnas
+  // Se añade estas dos columnas al hacer los Join
+  @Exclude()
   @Column({ name: 'user_id' })
   userId: number;
 
+  @Exclude()
   @Column({ name: 'project_id' })
   projectId: number;
 
   @ManyToOne(() => User, (user) => user.workTimeLogs, {
     onUpdate: 'CASCADE',
     onDelete: 'NO ACTION',
-    eager: true,
+    eager: true, // Devuelve las relaciones
   })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
@@ -37,6 +40,7 @@ export class WorkTimeLog {
   @ManyToOne(() => Project, (project) => project.workTimeLogs, {
     onUpdate: 'CASCADE',
     onDelete: 'NO ACTION',
+    eager: true,
   })
   @JoinColumn({ name: 'project_id', referencedColumnName: 'id' })
   project: Project;

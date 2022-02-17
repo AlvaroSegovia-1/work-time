@@ -44,10 +44,10 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        configService.get('database'),
+      useFactory: (configService: ConfigService) => ({
+        ...configService.get('database'),
+      }),
     }),
-
     ProjectsModule,
     WorkTimeLogsModule,
     TotalTimeLogsModule,
