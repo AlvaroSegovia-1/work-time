@@ -20,6 +20,8 @@ async function bootstrap() {
     .setTitle('Wort Time System example')
     .setDescription('The work time system API description')
     .setVersion('1.0')
+    .addTag('auth')
+    .addTag('users')
     .addTag('projects')
     .addTag('total-time-logs')
     .addTag('work-time-logs')

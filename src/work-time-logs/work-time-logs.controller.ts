@@ -16,13 +16,14 @@ import { ApiTags } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
 
 @ApiTags('work-time-logs')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('work-time-logs')
 export class WorkTimeLogsController {
   constructor(private readonly workTimeLogsService: WorkTimeLogsService) {}
 
   @Post()
   create(@Body() createWorkTimeLogDto: CreateWorkTimeLogDto) {
-    const user: User = {
+    /* const user: User = {
       id: 3,
       username: 'minombre',
       email: 'minombre@gmail.com',
@@ -32,7 +33,7 @@ export class WorkTimeLogsController {
       //workTimeLogs: [],
     };
 
-    return this.workTimeLogsService.create(createWorkTimeLogDto, user);
+    return this.workTimeLogsService.create(createWorkTimeLogDto, user); */
     //return;
   }
 

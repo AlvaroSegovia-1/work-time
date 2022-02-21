@@ -10,6 +10,9 @@ import configuration from './config/configuration';
 //import process from 'process';
 //import { getConnectionOptions } from 'typeorm';
 import { UsersModule } from './users/users.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -52,8 +55,9 @@ import { UsersModule } from './users/users.module';
     WorkTimeLogsModule,
     TotalTimeLogsModule,
     UsersModule,
+    AuthModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
 export class AppModule {}

@@ -10,17 +10,20 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserAccountDto } from './dto/create-user-account.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiTags } from '@nestjs/swagger';
+//import { CreateUserDto } from './dto/create-user.dto';
 
+@ApiTags('users')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor) //para @Exclude
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserAccountDto) {
+    // return this.usersService.create(dto);
   }
 
   /* @Post()
