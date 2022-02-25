@@ -3,14 +3,25 @@ import { CreateUserAccountDto } from 'src/users/dto/create-user-account.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
-  generateSucessAuthenticationResponse(user: User): Promise<LoginResponseDto> {
-    throw new Error('Method not implemented.');
-  }
+  constructor(
+    private usersService: UsersService,
+    //private tokenService: TokenService,
+  ) {}
 
-  constructor(private usersService: UsersService) {}
+  async generateSucessAuthenticationResponse(
+    user: User,
+  ): Promise<LoginResponseDto> {
+    //const token = await this.tokenService.generateAccessToken(user);
+   /*  return {
+      access_token: token,
+      username: user.username,
+    }; */
+    return null;
+  }
 
   async validateLoginCredentials(
     username: string,

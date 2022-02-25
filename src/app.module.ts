@@ -49,6 +49,8 @@ import { AuthService } from './auth/auth.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         ...configService.get('database'),
+        logger: 'simple-console',
+        logging: ['error'],
       }),
     }),
     ProjectsModule,

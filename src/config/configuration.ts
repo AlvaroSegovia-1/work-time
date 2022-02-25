@@ -17,4 +17,8 @@ export default () => ({
     retryDelay: 3000,
     retryAttempts: 10,
   },
+  jwt: {
+    jwt_access_expiresin: parseInt(process.env.JWT_ACCESS_EXPIRESIN) || 259200, // segundos
+    jwt_secret: process.env.JWT_SECRETKEY,
+  },
 });
