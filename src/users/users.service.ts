@@ -29,6 +29,7 @@ export class UsersService {
     return this.userRepository.save(tempEntity);
   }
 
+  // Para login
   getOneUserIncludingPass(username: string): Promise<User> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
     queryBuilder

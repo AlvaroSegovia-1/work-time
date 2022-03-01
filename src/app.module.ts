@@ -10,9 +10,11 @@ import configuration from './config/configuration';
 //import process from 'process';
 //import { getConnectionOptions } from 'typeorm';
 import { UsersModule } from './users/users.module';
-import { AuthController } from './auth/auth.controller';
+//import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
-import { AuthService } from './auth/auth.service';
+//import { AuthService } from './auth/auth.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './common/roles.guard';
 
 @Module({
   imports: [
@@ -59,7 +61,12 @@ import { AuthService } from './auth/auth.service';
     UsersModule,
     AuthModule,
   ],
-  controllers: [AuthController],
-  providers: [AuthService],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

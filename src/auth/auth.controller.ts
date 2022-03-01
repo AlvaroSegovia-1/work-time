@@ -37,7 +37,7 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('/login')
   async login(
-    @AuthUser() user: User,
+    @AuthUser() user: User, // decorador personalizado
     @Body() loginDto: CreateLoginDto,
   ): Promise<LoginResponseDto> {
     return await this.authService.generateSucessAuthenticationResponse(user);

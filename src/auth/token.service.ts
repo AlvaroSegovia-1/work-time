@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 //import { Repository } from "typeorm";
 //import { RefreshToken } from "./entities/refresh-token.entity";
-import { JWTPayload } from './jwt.payload';
+import { JWTPayload } from './jwt-payload';
 //import { SignOptions, TokenExpiredError } from 'jsonwebtoken';
 
 /* export interface RefreshTokenPayload {

@@ -9,18 +9,18 @@ import { TokenService } from './token.service';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    //private tokenService: TokenService,
+    private tokenService: TokenService,
   ) {}
 
   async generateSucessAuthenticationResponse(
     user: User,
   ): Promise<LoginResponseDto> {
-    //const token = await this.tokenService.generateAccessToken(user);
-   /*  return {
+    const token = await this.tokenService.generateAccessToken(user);
+    return {
       access_token: token,
       username: user.username,
-    }; */
-    return null;
+    };
+    //return null;
   }
 
   async validateLoginCredentials(

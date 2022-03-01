@@ -36,8 +36,9 @@ export class User {
 
   @OneToMany(() => WorkTimeLog, (workTimeLog) => workTimeLog.user)
   workTimeLogs?: WorkTimeLog[];
+  roles: any;
 
-  @BeforeInsert()
+  @BeforeInsert() // Para bcrypt
   async processPassword() {
     if (!this.password) {
       return;
