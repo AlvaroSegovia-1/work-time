@@ -5,10 +5,12 @@ import {
   Column,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserResponseDto } from '../dto/user-response.dto';
 import * as bcrypt from 'bcrypt';
+import { UserProfile } from './user-profile.entity';
 
 @Entity('users')
 export class User {
@@ -25,14 +27,17 @@ export class User {
   @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @OneToOne(() => UserProfile, (profile) => profile.user)
+  profile: UserProfile;
+
+  /*  @Column({ type: 'varchar', nullable: true })
   name?: string;
 
   @Column({ type: 'varchar', nullable: true })
   lastName?: string;
 
   @Column({ type: 'integer', nullable: true })
-  phoneNumber?: number;
+  phoneNumber?: number; */
 
   @OneToMany(() => WorkTimeLog, (workTimeLog) => workTimeLog.user)
   workTimeLogs?: WorkTimeLog[];
@@ -55,8 +60,10 @@ export class User {
       id: user.id,
       username: user.username,
       email: user.email,
-      lastName: user.lastName,
-      name: user.name,
+      fullname: `${user.profile.name} ${user.profile.lastName}`,
+      technologies: user.profile.technologies,
+      //lastName: user.lastName,
+      //name: user.name,
     };
   }
 }

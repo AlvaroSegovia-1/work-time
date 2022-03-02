@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 //import { AuthService } from './auth/auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './common/roles.guard';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { RolesGuard } from './common/roles.guard';
     TotalTimeLogsModule,
     UsersModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [
