@@ -2,12 +2,18 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
+import {
+  Affiliation,
+  UserProjectAffiliationType,
+} from './types/user-project-affiliation';
 
 /* const mock: Project[] = [
   {
@@ -43,7 +49,17 @@ export class ProjectsService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  getManyProjects(): Promise<Project[]> {
+  getManyProjects(
+    affiliation: UserProjectAffiliationType,
+    authUser: User,
+  ): Promise<Project[]> {
+    if (affiliation === Affiliation.OWNER) {
+      return this.projectRepository.find({
+        where: {
+          userId: authUser.id,
+        },
+      });
+    }
     //return mock;
     return this.projectRepository.find();
   }
@@ -52,7 +68,10 @@ export class ProjectsService {
     return this.projectRepository.findOne(projectId);
   }
 
-  async createOneProject(projectDto: CreateProjectDto): Promise<Project> {
+  async createOneProject(
+    projectDto: CreateProjectDto,
+    authUser: User,
+  ): Promise<Project> {
     //throw new Error('Method not implemented.');
     /*  const a = mock[0];
     return {
@@ -60,22 +79,25 @@ export class ProjectsService {
       ...projectDto,
     }; */
 
-    const exist = await this.projectRepository.count({
+    const countExist = await this.projectRepository.count({
       where: {
         key: projectDto.key,
       },
     });
-    if (exist > 0) {
+    if (countExist > 0) {
       throw new ConflictException(`La key ${projectDto.key} ya existe`);
     }
 
     const tempEntity = await this.projectRepository.create(projectDto);
-    return this.projectRepository.save(tempEntity);
+    tempEntity.userId = authUser.id;
+    const objSaved = await this.projectRepository.save(tempEntity);
+    return this.projectRepository.findOne(objSaved.id);
   }
 
   async partialUpdateOneProject(
     projectId: number,
     updateProjectDto: UpdateProjectDto,
+    authUser: User,
   ): Promise<Project> {
     //throw new Error('Method not implemented.');
     /* const res = mock.find((proj) => (proj.id = projectId));
@@ -91,13 +113,17 @@ export class ProjectsService {
     if (!preloadedProject) {
       throw new NotFoundException('El proyecto no existe');
     }
+
+    if (!(preloadedProject.userId === authUser.id)) {
+      throw new UnauthorizedException('No es dueño del proyecto');
+    }
     return this.projectRepository.save(preloadedProject);
   }
 
-  async deleteOneProject(projectId: number): Promise<void> {
+  async deleteOneProject(projectId: number, authUser: User): Promise<void> {
     //throw new Error('Method not implemented.');
     const project = await this.projectRepository.findOne(projectId);
-    if (!project) {
+    if (!project || project.userId !== authUser.id) {
       return;
     }
     this.projectRepository.delete(project);

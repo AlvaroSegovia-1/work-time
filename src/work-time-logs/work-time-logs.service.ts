@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Project } from 'src/projects/entities/project.entity';
+import { ProjectsService } from 'src/projects/projects.service';
+//import { Project } from 'src/projects/entities/project.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateWorkTimeLogDto } from './dto/create-work-time-log.dto';
@@ -12,11 +17,12 @@ export class WorkTimeLogsService {
   constructor(
     @InjectRepository(WorkTimeLog)
     private workTimeLogRepository: Repository<WorkTimeLog>,
+    private readonly projectsService: ProjectsService,
   ) {}
 
   async create(
     createWorkTimeLogDto: CreateWorkTimeLogDto,
-    user: User,
+    authUser: User,
   ): Promise<WorkTimeLog> {
     /*  const pro: Project = {
       id: 3,
@@ -26,29 +32,76 @@ export class WorkTimeLogsService {
       plannedHours: 250,
       owner: 'miowner',
     }; */
+
+    const project = await this.projectsService.getOneProject(
+      createWorkTimeLogDto.projectId,
+    );
+    if (project.userId !== authUser.id) {
+      throw new UnauthorizedException('El proyecto no pertenece al usuario');
+    }
     const tempEntity = await this.workTimeLogRepository.create({
       ...createWorkTimeLogDto,
-      user: user,
+      userId: authUser.id,
     });
     return this.workTimeLogRepository.save(tempEntity);
   }
 
-  findAll() {
+  async findAll(authUser: User): Promise<WorkTimeLog[]> {
     return this.workTimeLogRepository.find({
-      relations: ['user'],
+      where: {
+        user: {
+          id: authUser.id,
+        },
+      },
     });
     //return `This action returns all workTimeLogs`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} workTimeLog`;
+  async findOne(id: string, authUser: User): Promise<WorkTimeLog> {
+    const workTimeLog = await this.workTimeLogRepository.findOne({
+      where: {
+        id: id,
+        user: {
+          id: authUser.id,
+        },
+      },
+    });
+
+    if (!workTimeLog) {
+      throw new NotFoundException();
+    }
+    return workTimeLog;
   }
 
-  update(id: number, updateWorkTimeLogDto: UpdateWorkTimeLogDto) {
-    return `This action updates a #${id} workTimeLog`;
+  async update(
+    id: string,
+    updateWorkTimeLogDto: UpdateWorkTimeLogDto,
+    authUser: User,
+  ) {
+    const preloadData = {
+      id: id,
+      ...updateWorkTimeLogDto,
+    };
+    const preloadedWorkTimeLog = await this.workTimeLogRepository.preload(
+      preloadData,
+    );
+    if (!preloadedWorkTimeLog || preloadedWorkTimeLog.userId !== authUser.id) {
+      throw new NotFoundException();
+    }
+    return this.workTimeLogRepository.save(preloadedWorkTimeLog);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} workTimeLog`;
+  async remove(id: string, authUser: User) {
+    const workTimeLog = await this.workTimeLogRepository.findOne({
+      where: {
+        id: id,
+        userId: authUser.id,
+      },
+    });
+    if (!workTimeLog) {
+      return;
+    }
+
+    this.workTimeLogRepository.delete(workTimeLog);
   }
 }
