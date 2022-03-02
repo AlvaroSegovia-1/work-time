@@ -23,6 +23,14 @@ async function bootstrap() {
     .setTitle('Wort Time System example')
     .setDescription('The work time system API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'JWT',
+    )
     .addTag('auth')
     .addTag('users')
     .addTag('projects')

@@ -14,13 +14,14 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserAccountDto } from './dto/create-user-account.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/common/auth-user.decorator';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 //import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('users')
+@ApiBearerAuth('JWT')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor) //para @Exclude
 @UseGuards(JwtAuthGuard)

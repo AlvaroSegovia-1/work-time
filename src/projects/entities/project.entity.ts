@@ -1,12 +1,15 @@
 //import { ApiProperty } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Category } from 'src/categories/entities/category.entity';
 import { User } from 'src/users/entities/user.entity';
 import { WorkTimeLog } from 'src/work-time-logs/entities/work-time-log.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -62,11 +65,11 @@ export class Project {
   @OneToMany(() => WorkTimeLog, (workTimeLog) => workTimeLog.project)
   workTimeLogs: WorkTimeLog[];
 
-  /*  @JoinTable({
-    name: 'project_category',
+  @JoinTable({
+    name: 'project_category', // nombre tabla
     joinColumn: { name: 'projectId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' }
-  }); */
-  /* @ManyToMany(() => Category, { eager: true },
-  categories?: Category[]; */
+    inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+  })
+  @ManyToMany(() => Category, { eager: true })
+  categories?: Category[];
 }
