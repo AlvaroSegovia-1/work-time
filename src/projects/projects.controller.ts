@@ -66,7 +66,7 @@ export class ProjectsController {
     @AuthUser() authUser: User,
     @Body() projectDto: CreateProjectDto,
   ): Promise<Project> {
-    console.log(authUser);
+    //console.log(authUser);
     //return 'postOneProject';
     // return {} as Project;
     return this.projectsService.createOneProject(projectDto, authUser);
