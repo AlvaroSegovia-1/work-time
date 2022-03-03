@@ -1,12 +1,14 @@
 import {
   Controller,
   Get,
+  StreamableFile,
   //Post,
   //Body,
   //Patch,
   //Param,
   //Delete,
   UseGuards,
+  Response,
 } from '@nestjs/common';
 import { TotalTimeLogsService } from './total-time-logs.service';
 //import { CreateTotalTimeLogDto } from './dto/create-total-time-log.dto';
@@ -15,6 +17,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuthUser } from 'src/common/auth-user.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @ApiTags('total-time-logs')
 @ApiBearerAuth('JWT')
@@ -28,7 +32,7 @@ export class TotalTimeLogsController {
     return this.totalTimeLogsService.findAll(authUser);
   }
 
-  /* @Get('total-time-logs-pdf')
+  @Get('total-time-logs-pdf')
   getFilePdf(@Response({ passthrough: true }) res): StreamableFile {
     const file = createReadStream(join(process.cwd(), 'documento.pdf'));
     res.set({
@@ -36,5 +40,5 @@ export class TotalTimeLogsController {
       'Content-Disposition': 'attachment; filename="documento.pdf"',
     });
     return new StreamableFile(file);
-  } */
+  }
 }

@@ -10,6 +10,7 @@ import {
   ClassSerializerInterceptor,
   //ParseIntPipe,
   UseGuards,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserAccountDto } from './dto/create-user-account.dto';
@@ -18,6 +19,9 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/common/auth-user.decorator';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+//import * as fs from 'fs';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 //import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('users')
@@ -30,7 +34,7 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserAccountDto) {
-    //return this.usersService.create(createUserDto);
+    return this.usersService.create(createUserDto);
   }
 
   @Get()
@@ -59,5 +63,28 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  // Para subir imagen
+  /*  @Post(':username/profile-picture')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadPicture(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+    // implementacion de storage
+    fs.writeFileSync('new-image.png', file.buffer.toString());
+  } */
+
+  @Post(':username/profile-picture')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files',
+      }),
+    }),
+  )
+  uploadPicture(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+    // implementacion de storage
+    // fs.writeFileSync('new-image.png', file.buffer.toString());
   }
 }
